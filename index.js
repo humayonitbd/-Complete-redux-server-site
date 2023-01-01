@@ -164,6 +164,7 @@ async function run(){
         //JWT token
         app.get('/jwt', async(req, res)=>{
             const email = req.query.email;
+            console.log(email)
             const query = {userEmail: email};
             const user = await usersCollection.findOne(query);
             // console.log(user, email)
