@@ -54,6 +54,13 @@ async function run(){
             const users = await usersCollection.find(query).toArray();
             res.send(users)
         })
+        app.delete('/users/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const user = await usersCollection.deleteOne(query);
+            res.send(user);
+            
+        })
 
 
         // admin 
@@ -74,12 +81,39 @@ async function run(){
             res.send(products)
         })
 
+        app.post('/allProducts', async(req, res)=>{
+            const body = req.body;
+            const result = await allProductsCollection.insertOne(body);
+            res.send(result)
+        })
 
         app.get('/product/:id', async(req, res)=>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)}
             const product = await allProductsCollection.findOne(query);
             res.send(product)
+        })
+        app.delete('/product/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const product = await allProductsCollection.deleteOne(query);
+            res.send(product)
+        })
+        app.put('/product/:id', async(req, res)=>{
+            const id = req.params.id;
+            const body = req.body;
+            const filter = {_id: ObjectId(id)}
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                  name:body.name,
+                  details:body.details,
+                  price:body.price
+
+                },
+              };
+            const updateProduct = await allProductsCollection.updateOne(filter, updateDoc, options);
+            res.send(updateProduct)
         })
 
 
